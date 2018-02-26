@@ -20,11 +20,11 @@ public class MongoReactiveApplication {
 
 	@Bean
 	CommandLineRunner demo(MovieRepository repository) {
-		repository.deleteAll();
 		return args -> {
-			Stream.of("Test1, Test2, Test3".split(","))
-					.map(name -> new Movie(UUID.randomUUID().toString(), name))
-					.forEach(m -> repository.save(m).subscribe(System.out::println));
+			repository.deleteAll().subscribe(null, null, () ->
+					Stream.of("Test1, Test2, Test3".split(","))
+							.map(name -> new Movie(UUID.randomUUID().toString(), name))
+							.forEach(m -> repository.save(m).subscribe(System.out::println)));
 		};
 	}
 }
