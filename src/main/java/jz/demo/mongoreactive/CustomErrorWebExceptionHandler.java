@@ -27,7 +27,6 @@ public class CustomErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
 	@Override
 		protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
-			System.out.println(BodyInserters.fromObject(errorAttributes));
 			return RouterFunctions.route((request) -> getError(request) instanceof IllegalAccessException, this::render4XX).andRoute(RequestPredicates.all(), this::render5XX);
 		}
 
