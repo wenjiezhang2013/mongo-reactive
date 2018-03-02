@@ -35,10 +35,14 @@ public class ReactiveController {
 
 
     @GetMapping(value = "/movie/{id}/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    Flux<MovieEvent> stream(@PathVariable String id) {
+    Flux<MovieEvent> stream(@PathVariable String id) throws IllegalAccessException {
         Flux<Long> interval = Flux.interval(Duration.ofSeconds(1));
 
         Flux<MovieEvent> events =  Flux.fromStream(Stream.generate(() -> new MovieEvent(movieRepository.findById(id).block(), new Date(), "jack")));
+
+        if(events instanceof Flux) {
+            throw new IllegalAccessException();
+        }
 
         return Flux.zip(interval, events).map(Tuple2::getT2);
     }
